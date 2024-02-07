@@ -18,6 +18,7 @@ const hashMap = () => {
                 totalBuckets += 1;
             }
         }
+        console.log(totalBuckets)
 
         return totalBuckets >= tableSize * loadFactor
     }
@@ -34,10 +35,9 @@ const hashMap = () => {
     }
 
     let set = (key, value) => {
-        // let index = hash(key) % buckets.length;
-        let index = key;
-        checkIndexBounds(index);
+        let index = hash(key) % buckets.length;
 
+        checkIndexBounds(index);
         if (loadFactorReached()) {
             buckets.length = buckets.length * 2;
             index = hash(key) % buckets.length;
@@ -52,10 +52,24 @@ const hashMap = () => {
     }
 }
 
+function randomString() { // Generates a random 4 length string for testing
+    charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomString = '';
+
+    for (let i = 0; i < 4; i++) {
+        let randomPos = Math.floor(Math.random() * charSet.length);
+        randomString += charSet.substring(randomPos, randomPos + 1);
+    }
+
+    return randomString;
+}
+
 let hashMap1 = hashMap();
 
-for (let i = 0; i < 13; i ++) { // i < 13 Should double the length of the array (reached 75% capacity)
-    hashMap1.set(i, 'hello hashMap');
+for (let i = 0; i < 40; i ++) { // i < 13 Should double the length of the array (reached 75% capacity)
+    let randomKey = randomString();
+    hashMap1.set(randomKey, 'hello hashMap');
 }
 
 console.log(hashMap1.buckets);
+console.log('length of hashMap:', hashMap1.buckets.length)
