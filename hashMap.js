@@ -18,7 +18,6 @@ const hashMap = () => {
                 totalBuckets += 1;
             }
         }
-        console.log('total buckets:', totalBuckets)
 
         return totalBuckets >= tableSize * loadFactor
     }
@@ -59,11 +58,24 @@ const hashMap = () => {
         return bucket !== undefined && bucket.key === key;
     }
 
+    let remove = (key) => {
+        let index = hash(key);
+        let bucket = buckets[index];
+
+        if (bucket !== undefined && bucket.key === key) {
+            delete buckets[index]
+            return true
+        } else {
+            return false
+        }
+    }
+
     return {
         buckets,
         set,
         get,
         has,
+        remove,
     }
 }
 
@@ -82,17 +94,25 @@ function randomString() { // Generates a random 4 length string for testing
 let hashMap1 = hashMap();
 let getKey = 'testkey';
 
-for (let i = 0; i < 2; i ++) { // i < 13 Should double the length of the array (reached 75% capacity)
+for (let i = 0; i < 10; i ++) { // adjust the number of loops until the loadFactor is reached at least once
     let randomKey = randomString();
-hashMap1.set(randomKey, 'hello hashMap');
+    hashMap1.set(randomKey, 'hello hashMap');
 }
-hashMap1.set(getKey, 'hello getKey')
+hashMap1.set(getKey, 'hello getKey');
 
 // TESTING SET
+console.log('TESTING SET');
 console.log(hashMap1.buckets);
-console.log('length of hashMap:', hashMap1.buckets.length)
+console.log('length of hashMap:', hashMap1.buckets.length);
 // TESTING GET
-console.log(hashMap1.get(getKey))
-//TESTING HAS
-console.log('should be true', hashMap1.has(getKey))
-console.log('should be false', hashMap1.has('this is definitely not a key'))
+console.log('TESTING GET');
+console.log(hashMap1.get(getKey));
+// TESTING HAS
+console.log('TESTING HAS');
+console.log('should be true:', hashMap1.has(getKey));
+console.log('should be false:', hashMap1.has('this is definitely not a key'));
+// TESTING REMOVE
+console.log('TESTING REMOVE');
+console.log('should be true:', hashMap1.remove(getKey));
+console.log('testKey should be removed:', hashMap1.buckets);
+console.log('should be false:', hashMap1.remove('this is definitely not a key'));
