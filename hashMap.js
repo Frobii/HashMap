@@ -18,7 +18,7 @@ const hashMap = () => {
                 totalBuckets += 1;
             }
         }
-        console.log(totalBuckets)
+        console.log('total buckets:', totalBuckets)
 
         return totalBuckets >= tableSize * loadFactor
     }
@@ -31,11 +31,11 @@ const hashMap = () => {
             hashCode = primeNumber * hashCode + key.charCodeAt(i);
         }
 
-        return hashCode;
+        return hashCode % buckets.length;
     }
 
     let set = (key, value) => {
-        let index = hash(key) % buckets.length;
+        let index = hash(key);
 
         checkIndexBounds(index);
         if (loadFactorReached()) {
@@ -46,9 +46,24 @@ const hashMap = () => {
         buckets[index] = {key: key, value: value};
     }
 
+    let get = (key) => {
+        let index = hash(key);
+
+        return buckets[index];
+    }
+
+    let has = (key) => {
+        let index = hash(key);
+        let bucket = buckets[index];
+
+        return bucket !== undefined && bucket.key === key;
+    }
+
     return {
         buckets,
         set,
+        get,
+        has,
     }
 }
 
@@ -65,11 +80,19 @@ function randomString() { // Generates a random 4 length string for testing
 }
 
 let hashMap1 = hashMap();
+let getKey = 'testkey';
 
-for (let i = 0; i < 40; i ++) { // i < 13 Should double the length of the array (reached 75% capacity)
+for (let i = 0; i < 2; i ++) { // i < 13 Should double the length of the array (reached 75% capacity)
     let randomKey = randomString();
-    hashMap1.set(randomKey, 'hello hashMap');
+hashMap1.set(randomKey, 'hello hashMap');
 }
+hashMap1.set(getKey, 'hello getKey')
 
+// TESTING SET
 console.log(hashMap1.buckets);
 console.log('length of hashMap:', hashMap1.buckets.length)
+// TESTING GET
+console.log(hashMap1.get(getKey))
+//TESTING HAS
+console.log('should be true', hashMap1.has(getKey))
+console.log('should be false', hashMap1.has('this is definitely not a key'))
