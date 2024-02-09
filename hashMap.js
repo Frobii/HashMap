@@ -70,12 +70,32 @@ const hashMap = () => {
         }
     }
 
+    let length = () => {
+        let tally = 0;
+        for (let i = 0; i < buckets.length; i ++) {
+            if (buckets[i]) {
+                tally += 1;
+            }
+        }
+        return tally;
+    }
+
+    let clear = () => {
+        for (let i = 0; i < buckets.length; i ++) {
+            if (buckets[i]) {
+                delete buckets[i]
+            }
+        }
+    }
+
     return {
         buckets,
         set,
         get,
         has,
         remove,
+        length,
+        clear,
     }
 }
 
@@ -94,7 +114,7 @@ function randomString() { // Generates a random 4 length string for testing
 let hashMap1 = hashMap();
 let getKey = 'testkey';
 
-for (let i = 0; i < 10; i ++) { // adjust the number of loops until the loadFactor is reached at least once
+for (let i = 0; i < 20; i ++) { // adjust the number of loops until the loadFactor is reached at least once
     let randomKey = randomString();
     hashMap1.set(randomKey, 'hello hashMap');
 }
@@ -116,3 +136,8 @@ console.log('TESTING REMOVE');
 console.log('should be true:', hashMap1.remove(getKey));
 console.log('testKey should be removed:', hashMap1.buckets);
 console.log('should be false:', hashMap1.remove('this is definitely not a key'));
+// TESTING LENGTH
+console.log(hashMap1.length())
+// TESTING CLEAR
+hashMap1.clear()
+console.log('this should be empty:', hashMap1.buckets)
