@@ -80,12 +80,45 @@ const hashMap = () => {
         return tally;
     }
 
+    let keys = () => {
+        let arrayOfKeys = [];
+        for (let i = 0; i < buckets.length; i ++) {
+            if (buckets[i]) {
+                arrayOfKeys.push(buckets[i].key)
+            }
+        }
+        return arrayOfKeys;
+    }
+
+    let values = () => {
+        let arrayOfValues = [];
+        for (let i = 0; i < buckets.length; i ++) {
+            if (buckets[i]) {
+                arrayOfValues.push(buckets[i].value)
+            }
+        }
+        return arrayOfValues;
+    }
+
+    let entries = () => {
+        let arrayOfEntries = [];
+        let j = 0;
+        for (let i = 0; i < buckets.length; i ++) {
+            if (buckets[i]) {
+                arrayOfEntries[j] = [buckets[i].key, buckets[i].value]
+                j ++;
+            }
+        }
+        return arrayOfEntries;
+    }
+
     let clear = () => {
         for (let i = 0; i < buckets.length; i ++) {
             if (buckets[i]) {
                 delete buckets[i]
             }
         }
+        buckets.length = 16;
     }
 
     return {
@@ -95,6 +128,9 @@ const hashMap = () => {
         has,
         remove,
         length,
+        keys,
+        values,
+        entries,
         clear,
     }
 }
@@ -111,13 +147,13 @@ function randomString() { // Generates a random 4 length string for testing
     return randomString;
 }
 
+// CREATING/POPULATING THE HASHMAP
 let hashMap1 = hashMap();
-let getKey = 'testkey';
-
 for (let i = 0; i < 20; i ++) { // adjust the number of loops until the loadFactor is reached at least once
     let randomKey = randomString();
-    hashMap1.set(randomKey, 'hello hashMap');
+    hashMap1.set(randomKey, `hello hashMap ${i}`);
 }
+let getKey = 'testkey';
 hashMap1.set(getKey, 'hello getKey');
 
 // TESTING SET
@@ -137,7 +173,18 @@ console.log('should be true:', hashMap1.remove(getKey));
 console.log('testKey should be removed:', hashMap1.buckets);
 console.log('should be false:', hashMap1.remove('this is definitely not a key'));
 // TESTING LENGTH
-console.log(hashMap1.length())
+console.log('TESTING LENGTH');
+console.log('length:', hashMap1.length())
+// TESTING KEYS
+console.log('TESTING KEYS');
+console.log('should contain all keys:', hashMap1.keys())
+// TESTING VALUES
+console.log('TESTING VALUES');
+console.log('should contain all values:', hashMap1.values())
+// TESTING ENTRIES
+console.log('TESTING ENTRIES');
+console.log('should contain all entries:', hashMap1.entries())
 // TESTING CLEAR
+console.log('TESTING CLEAR');
 hashMap1.clear()
 console.log('this should be empty:', hashMap1.buckets)
